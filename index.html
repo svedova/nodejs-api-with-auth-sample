@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Document</title>
+</head>
+
+<body>
+    <button onclick="getData()">Get Data</button>
+    <ul id="items"></ul>
+
+    <script>
+        var token = null;
+
+        // sayfa açıldığında çalışan token alma kodu.
+        // token ı alıp değişkene atar.
+        (function getToken()
+        {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                "username": "admin",
+                "password": "password"
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("http://localhost:3000/api/login", requestOptions)
+                .then(response => response.json())
+                .then(result => token = result.token)
+                .catch(error => console.log('error', error));
+        })();
+
+        // Button a basılınca verileri çeken fetch kodu.
+        function getData() {
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${token}`);
+
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            fetch("http://localhost:3000/api/data", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    var ul = document.getElementById("items");
+                    ul.innerHTML = "";
+
+                    for (let i = 0; i < result.length; i++) {
+                        const item = result[i];
+
+                        ul.innerHTML += `<li>${item.name}</li>`;
+                    }
+                })
+                .catch(error => console.log('error', error));
+        }
+    </script>
+</body>
+
+</html>
