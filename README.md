@@ -7,4 +7,4 @@ Projeyi bilgisayarınıza clone ettikten sonra ilk olarak `npm install` ile pake
 ### JWT authentication 
 `node app_jwt.js` komutunu çalıştırarak ilgili kodu çalıştırın.
 ### index.html
-`index.html` için önce api yi istediğiniz auth ile çalıştırın sonra index.html dosyasını çift tıklayarak tarayıcı da açın.
+`index.html` için önce jwt auth ile olan api yi çalıştırın sonra index.html dosyasını çift tıklayarak tarayıcı da açın.
