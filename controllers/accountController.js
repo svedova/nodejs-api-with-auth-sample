@@ -15,7 +15,7 @@ const login = (req, res) => {
                 const token = jwt.sign({ username, role: user.role }, secretKey, { expiresIn: '1h' });
                 res.status(200).json({ token });
             } else {
-                res.status(401).json({ message: 'Invalid username or password' });
+                res.status(401).json({ message: 'Unauthorized access.' });
             }
         });
 };
@@ -34,8 +34,8 @@ const addNewUser = (req, res) => {
 
     // Kullanıcıyı veritabanına ekleme
     user.save()
-        .then(() => res.status(201).json(user))
-        .catch(err => console.error(`Kullanıcı(${username}) eklerken hata oluştu: `, err));
+        .then(() => res.status(201).json({ user }))
+        .catch(err => res.status(500).json({ message: `Error : ${err} - Username : ${username}` }));
 };
 
 // JWT ile kimlik doğrulaması için middleware
@@ -47,14 +47,14 @@ const authenticate = (req, res, next) => {
 
         jwt.verify(token, secretKey, (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                return res.status(403).json({ message: 'Forbidden access.' });
             }
 
             req.user = user;
             next();
         });
     } else {
-        res.sendStatus(401);
+        res.status(401).json({ message: 'Unauthorized access.' });
     }
 };
 
