@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const dbSchemas = require('./database.schema.service');
-const validations = require('../validators/account.validate');
-
-const secretKey = "mysecretkey"; // JWT için gizli anahtarınız
+const validations = require('../validators/account.validates');
+const middleware = require('../middlewares/account.middleware');
 
 // Kullanıcı adı ve şifre ile kimlik doğrulama ve token üretme
 const login = (req, res) => {
@@ -14,12 +13,12 @@ const login = (req, res) => {
         return res.status(400).json({ message: 'Model is not valid.', errors: valid.error.details });
 
     // Basit bir kullanıcı adı ve şifre kontrolü
-    dbSchemas.UserSchema.findOne({ username: username, password: password })
+    dbSchemas.UserSchema.findOne({ username: model.username, password: model.password })
         .then(user => {
             if (user) {
                 // Kullanıcı adı ve şifre doğruysa ve kullanıcıyı role ile belirle
                 // geriye 1 saatlik token döndürülür.
-                const token = jwt.sign({ username, role: user.role }, secretKey, { expiresIn: '1h' });
+                const token = jwt.sign({ username, role: user.role }, middleware.secretKey, { expiresIn: '1h' });
                 return res.status(200).json({ token });
             } else {
                 return res.status(401).json({ message: 'Unauthorized access.' });
@@ -29,13 +28,18 @@ const login = (req, res) => {
 
 // Kullanıcı insert kodu.
 const addNewUser = (req, res) => {
-    const { username, password, role } = req.body;
+    const model = { username, password, role } = req.body;
+
+    const valid = validations.addNewUserModelValidateSchema.validate(model);
+
+    if (valid.error)
+        return res.status(400).json({ message: 'Model is not valid.', errors: valid.error.details });
 
     // Yeni bir kullanıcı oluşturma
     let user = new dbSchemas.UserSchema({
-        username: username,
-        password: password,
-        role: role,
+        username: model.username,
+        password: model.password,
+        role: model.role,
         lastLoginDate: new Date()
     });
 

@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const secretKey = "mysecretkey"; // JWT için gizli anahtarınız
+
 // JWT ile kimlik doğrulaması için middleware
 const authenticate = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -29,6 +31,7 @@ const requireAdmin = (req, res, next) => {
 };
 
 module.exports = {
+    secretKey,
     authenticate,
     requireAdmin
 }

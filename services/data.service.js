@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const dbSchemas = require('./database.schema.service');
+const validations = require('../validators/data.validates');
 
 // tüm verilerin çekilmesi.
 const list = (req, res) => {
@@ -10,6 +11,11 @@ const list = (req, res) => {
 
 // id ye göre bir verinin çekilmesi.
 const getById = (req, res) => {
+    const valid = validations.getByIdModelValidateSchema.validate(req.params.id);
+
+    if (valid.error)
+        return res.status(400).json({ message: 'Parameter is not valid.', errors: valid.error.details });
+
     const id = new mongoose.Types.ObjectId(req.params.id);
 
     // findOne metodu kullanılır. 
@@ -27,11 +33,18 @@ const getById = (req, res) => {
 // yeni veri ekleme
 const add = (req, res) => {
 
+    const model = { name, desc } = req.body;
+
+    const valid = validations.addModelValidateSchema.validate(model);
+
+    if (valid.error)
+        return res.status(400).json({ message: 'Model is not valid.', errors: valid.error.details });
+
     // hangi koleksiyon ile işlem yapılacaksa
     // onun modeli kullanılır.
     let data = new dbSchemas.TestSchema({
-        name: req.body.name,
-        desc: req.body.desc
+        name: model.name,
+        desc: model.desc
     });
 
     // save metodu ile insert atılır.

@@ -1,5 +1,6 @@
 const Joi = require('joi');
 
+// login işlemi için gerekli model validator
 const loginModelValidateSchema = Joi.object({
     username: Joi.string()
         .alphanum()
@@ -11,6 +12,7 @@ const loginModelValidateSchema = Joi.object({
         .pattern(new RegExp('^[a-zA-Z0-9]{6,16}$'))
 });
 
+// yeni kullanıcı kayıt işlemi için gerekli model validator
 const addNewUserModelValidateSchema = Joi.object({
     username: Joi.string()
         .alphanum()
