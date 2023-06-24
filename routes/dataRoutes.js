@@ -1,7 +1,11 @@
 const express = require('express');
-const account = require('../controllers/accountController');
-const data = require('../controllers/dataController');
 const router = express.Router();
+
+// bazı middleware lere erişmek için.
+const account = require('../controllers/accountController');
+
+// service yapımızın import edilmesi.
+const data = require('../controllers/dataController');
 
 router.get('/data', account.authenticate, data.list);
 router.get('/data/:id', account.authenticate, data.getById);

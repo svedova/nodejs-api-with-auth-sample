@@ -12,6 +12,7 @@ const login = (req, res) => {
         .then(user => {
             if (user) {
                 // Kullanıcı adı ve şifre doğruysa ve kullanıcıyı role ile belirle
+                // geriye 1 saatlik token döndürülür.
                 const token = jwt.sign({ username, role: user.role }, secretKey, { expiresIn: '1h' });
                 res.status(200).json({ token });
             } else {
@@ -32,7 +33,8 @@ const addNewUser = (req, res) => {
         lastLoginDate: new Date()
     });
 
-    // Kullanıcıyı veritabanına ekleme
+    // Kullanıcıyı veritabanına ekleme ve işlem başarılı ise 
+    // geriye kullanıcı nesnesini döndürme.
     user.save()
         .then(() => res.status(201).json({ user }))
         .catch(err => res.status(500).json({ message: `Error : ${err} - Username : ${username}` }));
