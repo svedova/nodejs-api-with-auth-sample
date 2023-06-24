@@ -1,7 +1,10 @@
 const express = require('express');
-const accountRoutes = require('./routes/accountRoutes');
-const dataRoutes = require('./routes/dataRoutes');
-const context = require('./context/database');
+const accountRoutes = require('./routes/account.routes');
+const dataRoutes = require('./routes/data.routes');
+
+// database bağlantısı sağlanır.
+const db = require('./services/database.service');
+
 const app = express();
 const port = 3000;
 

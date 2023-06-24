@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const schemas = require('../context/schemas');
+const dbSchemas = require('./database.schema.service');
 
 // tüm verilerin çekilmesi.
 const list = (req, res) => {
     // find metodu ile filtresiz veri çekme.
-    schemas.TestSchema.find()
+    dbSchemas.TestSchema.find()
         .then(items => res.status(200).json({ items }));
 };
 
@@ -14,12 +14,12 @@ const getById = (req, res) => {
 
     // findOne metodu kullanılır. 
     // _id mongo db de otomatik oluşan key kolon adıdır.
-    schemas.TestSchema.findOne({ _id: id })
+    dbSchemas.TestSchema.findOne({ _id: id })
         .then(item => {
             if (!item) {
-                res.status(404).json({ message: "Not found." });
+                return res.status(404).json({ message: "Not found." });
             } else {
-                res.status(200).json({ item });
+                return res.status(200).json({ item });
             }
         });
 };
@@ -29,7 +29,7 @@ const add = (req, res) => {
 
     // hangi koleksiyon ile işlem yapılacaksa
     // onun modeli kullanılır.
-    let data = new schemas.TestSchema({
+    let data = new dbSchemas.TestSchema({
         name: req.body.name,
         desc: req.body.desc
     });
