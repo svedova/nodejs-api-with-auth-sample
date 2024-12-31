@@ -25,6 +25,7 @@
         fetch("/api/data", requestOptions)
           .then((response) => response.json())
           .then((result) => {
+            console.log(result);
             var ul = document.getElementById("items");
             ul.innerHTML = "";
 
