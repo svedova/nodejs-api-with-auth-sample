@@ -24,13 +24,12 @@
 
         fetch("/api/data", requestOptions)
           .then((response) => response.json())
-          .then((result) => {
-            console.log(result);
+          .then(({ items }) => {
             var ul = document.getElementById("items");
             ul.innerHTML = "";
 
-            for (let i = 0; i < result.length; i++) {
-              const item = result[i];
+            for (let i = 0; i < items.length; i++) {
+              const item = items[i];
 
               ul.innerHTML += `<li>${item.message}</li>`;
             }
